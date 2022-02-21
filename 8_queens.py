@@ -43,12 +43,18 @@ class Board:
     def manhattan(self):
         pass
     
+    @property
+    def attack(self):
+        # Checking each row for multiple queens returns the row with multiple queens
+
+        for row in self.board:
+            if row.count(1) > 1:
+                return row.index(1)
+    
     def shuffle(self):
         for row in self.board:
             i = random.randint(0,7)
             row[i] = 1
-    
-    
     
     def pprint(self):
         for row in self.board:
