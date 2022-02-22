@@ -1,3 +1,4 @@
+import enum
 import random
 
 class Node:
@@ -32,28 +33,36 @@ Note: in the board, 0 represents blank space and 1 represents a queen
 class Board:
     def __init__(self, N, k, l):
         self.board = [[0]*N for _ in range(N)]
-        self.k = k
-        self.l = l
+        self.k = k-1
+        self.l = l-1
     
+    # returns True if the board is solved
     @property
     def solved(self):
         pass
     
+    # returns the number of queens that can attack another queen
     @property
     def manhattan(self):
         pass
     
+    # get list of all queens coordinates on the board
     @property
-    def attack(self):
-        # Checking each row for multiple queens returns the row with multiple queens
-
-        for row in self.board:
-            if row.count(1) > 1:
-                return row.index(1)
+    def queens(self):
+        queens = []
+        for i in range(8):
+            for j in range(8):
+                if self.board[i][j] == 1:
+                    queens.append((i, j))
+        return queens
     
+    # place the fixed queen
+    def fixed_queen(self):
+        self.board[self.k][self.l] = 1
+
     def shuffle(self):
         for row in self.board:
-            i = random.randint(0,7)
+            i = random.randint(0,6)
             row[i] = 1
     
     def pprint(self):
@@ -64,7 +73,10 @@ class Board:
 
 board = Board(8, 8, 7)
 board.shuffle()
+board.fixed_queen()
 board.pprint()
-    
+
+print(board.queens)
+
         
 
