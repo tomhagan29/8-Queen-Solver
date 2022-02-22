@@ -4,8 +4,9 @@ import numpy as np
 
 """
 To-do:
-    - Change the board to np.array
     - Implement diag_check()
+        - Look into numpy diagonal function
+        - https://arrayjson.com/numpy-diagonal/#numpydiagonal_of_a_2-D_array
     - Implement manhatten()
     - Implement solved()
 """
@@ -114,9 +115,11 @@ class Board:
         return out
 
     # check the given coordinate on the board for multiple queens on the diagonal
-    def diag_check(self, coords):
-        pass
-    
+    def diag_check(self):
+        for i in range(8):
+            for j in range(8):
+                pass
+
     # returns True if the specified coords are not in range of a queen
     def safe_tiles(self, coords):
         pass
@@ -143,7 +146,7 @@ board.shuffle()
 board.fixed_queen()
 board.pprint()
 
-print(board.row_check())
+print(board.diag_check())
 
         
 
