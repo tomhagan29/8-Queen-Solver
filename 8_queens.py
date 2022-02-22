@@ -2,6 +2,15 @@ from collections import Counter
 import random
 import numpy as np
 
+"""
+To-do:
+    - Change the board to np.array
+    - Implement diag_check()
+    - Implement manhatten()
+    - Implement solved()
+"""
+
+
 class Node:
     def __init__(self, board, parent=None):
         self.board = board
