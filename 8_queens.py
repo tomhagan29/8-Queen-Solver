@@ -21,7 +21,12 @@ class Node:
             
 
 class Solver:
-    pass
+    def __init__(self, start):
+        self.start = start
+    
+
+    def solve(self):
+        pass
 
 
 """
@@ -40,6 +45,7 @@ class Board:
             self.k = self.k -1
         elif self.l == 8:
             self.l = self.l - 1
+    
     # returns True if the board is solved
     @property
     def solved(self):
@@ -66,12 +72,31 @@ class Board:
 
     # returns the positions of queens that are in the same column, row or diag
     def unsafe_queens(self):
-        for queen in self.queens:
-            pass
+        for i in range(8):
+            for j in range(8):
+                if self.board[i][j] == 1:
+                    pass
     
-    # returns a list of tiles that aren't attackable by queens
-    def safe_tiles(self):
+    # checks the rows on the boar for multiple queens
+    def row_check(self):
         pass
+
+    # check the cols on the board for multiple queens
+    def col_check(self):
+        pass
+
+    # check the given coordinate on the board for multiple queens on the diagonal
+    def diag_check(self, coords):
+        pass
+    
+    # returns True if the specified coords are not in range of a queen
+    def safe_tiles(self, coords):
+        pass
+
+    # move the specified queen to a safe tile
+    def move(self, coords):
+        pass
+    
     # populates board with queens in random positions
     def shuffle(self):
         for i in range(7):
@@ -84,13 +109,13 @@ class Board:
 
 
 
+
 board = Board(8, 8, 7)
 board.shuffle()
 board.fixed_queen()
 board.pprint()
 
 print(board.queens)
-print(board.k)
-print(board.l)
+
         
 
