@@ -4,9 +4,7 @@ import numpy as np
 
 """
 To-do:
-    - Implement diag_check()
-        - Look into numpy diagonal function
-        - https://arrayjson.com/numpy-diagonal/#numpydiagonal_of_a_2-D_array
+    - fix check methods
     - Implement manhatten()
     - Implement solved()
 """
@@ -77,17 +75,6 @@ class Board:
                     queens.append((i, j))
         return queens
     
-    # place the fixed queen
-    def fixed_queen(self):
-        self.board[self.k][self.l] = 1
-
-    # returns the positions of queens that are in the same column, row or diag
-    def unsafe_queens(self):
-        for i in range(8):
-            for j in range(8):
-                if self.board[i][j] == 1:
-                    pass
-    
     # checks the rows of the board for multiple queens
     # returns the index of rows with multiple queens
     def row_check(self):
@@ -114,6 +101,10 @@ class Board:
 
         return out
 
+    # method for generating a list of tiles that are safe
+    def safe_tiles(self):
+        pass
+
     # check the given coordinate on the board for multiple queens on the diagonal
     def diag_check(self):
         board = np.array(self.board)
@@ -124,17 +115,10 @@ class Board:
                 diags.append(i)
         
         return diags
-
-    # returns True if the specified coords are not in range of a queen
-    def safe_tiles(self, coords):
-        pass
-
-    # move the specified queen to a safe tile
-    def move(self, coords):
-        pass
     
-    # populates board with queens in random positions
+    # populates board with queens in random positions except the fixed queen
     def shuffle(self):
+        self.board[self.k][self.l] = 1
         for i in range(7):
             j = random.randint(0,7)
             self.board[i][j] = 1
@@ -148,10 +132,13 @@ class Board:
 
 board = Board(8, 8, 7)
 board.shuffle()
-board.fixed_queen()
 board.pprint()
-
+print(board.queens)
+print(board.col_check())
+print(board.row_check())
 print(board.diag_check())
+
+
 
         
 
