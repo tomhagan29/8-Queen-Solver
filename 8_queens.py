@@ -27,6 +27,9 @@ class Node:
         def h(self):
             return self.board.manhattan
         
+        @property
+        def solved(self):
+            return self.board.solved
             
 
 class Solver:
@@ -108,12 +111,20 @@ class Board:
     # check the given coordinate on the board for multiple queens on the diagonal
     def diag_check(self):
         board = np.array(self.board)
-        diags = []
+        diags = [[],[]]
+        # checking left to right diagonal
         for i in range(-8,8):
-            temp = board.diagonal(i)
-            if np.count_nonzero(temp == 1) > 1:
-                diags.append(i)
+            temp = list(board.diagonal(i))
+            if temp.count(1) > 1:
+                diags[0].append(i)
         
+        # checking right to left diagonal
+        board = np.fliplr(self.board)
+        for i in range(-8,8):
+            temp = list(board.diagonal(i))
+            if temp.count(1) > 1:
+                diags[1].append(i)
+            
         return diags
     
     # populates board with queens in random positions except the fixed queen
@@ -134,8 +145,7 @@ board = Board(8, 8, 7)
 board.shuffle()
 board.pprint()
 print(board.queens)
-print(board.col_check())
-print(board.row_check())
+print(np.fliplr(board.board))
 print(board.diag_check())
 
 
