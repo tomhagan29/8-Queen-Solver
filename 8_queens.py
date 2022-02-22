@@ -33,9 +33,13 @@ Note: in the board, 0 represents blank space and 1 represents a queen
 class Board:
     def __init__(self, N, k, l):
         self.board = [[0]*N for _ in range(N)]
-        self.k = k-1
-        self.l = l-1
-    
+        self.k = (k % 8) + 1
+        self.l = (l % 8) + 1
+        # subtracting 1 if the index is out of bounds
+        if self.k == 8:
+            self.k = self.k -1
+        elif self.l == 8:
+            self.l = self.l - 1
     # returns True if the board is solved
     @property
     def solved(self):
@@ -60,10 +64,19 @@ class Board:
     def fixed_queen(self):
         self.board[self.k][self.l] = 1
 
+    # returns the positions of queens that are in the same column, row or diag
+    def unsafe_queens(self):
+        for queen in self.queens:
+            pass
+    
+    # returns a list of tiles that aren't attackable by queens
+    def safe_tiles(self):
+        pass
+    # populates board with queens in random positions
     def shuffle(self):
-        for row in self.board:
-            i = random.randint(0,6)
-            row[i] = 1
+        for i in range(7):
+            j = random.randint(0,7)
+            self.board[i][j] = 1
     
     def pprint(self):
         for row in self.board:
@@ -77,6 +90,7 @@ board.fixed_queen()
 board.pprint()
 
 print(board.queens)
-
+print(board.k)
+print(board.l)
         
 
