@@ -1,0 +1,19 @@
+class node
+	
+	function f
+	function h
+
+
+class board
+	
+	function populate_board
+	function safe_tile
+	function move
+	function manhattan
+	function solved
+
+
+class solver
+	
+	funciton solve
+		
