@@ -116,9 +116,14 @@ class Board:
 
     # check the given coordinate on the board for multiple queens on the diagonal
     def diag_check(self):
-        for i in range(8):
-            for j in range(8):
-                pass
+        board = np.array(self.board)
+        diags = []
+        for i in range(-8,8):
+            temp = board.diagonal(i)
+            if np.count_nonzero(temp == 1) > 1:
+                diags.append(i)
+        
+        return diags
 
     # returns True if the specified coords are not in range of a queen
     def safe_tiles(self, coords):
