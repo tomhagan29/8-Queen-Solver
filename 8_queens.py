@@ -1,5 +1,6 @@
-import enum
+from collections import Counter
 import random
+import numpy as np
 
 class Node:
     def __init__(self, board, parent=None):
@@ -77,13 +78,31 @@ class Board:
                 if self.board[i][j] == 1:
                     pass
     
-    # checks the rows on the boar for multiple queens
+    # checks the rows of the board for multiple queens
+    # returns the index of rows with multiple queens
     def row_check(self):
-        pass
+        rows = []
+        for row in range(8):
+            temp = 0
+            for col in range(8):
+                if self.board[row][col] == 1:
+                    temp += 1
+                
+                if temp > 1:
+                    rows.append(row)
+        return rows
 
     # check the cols on the board for multiple queens
+    # returns the index of columns with multiple queens
     def col_check(self):
-        pass
+        cols = []
+        for queen in self.queens:
+            cols.append(queen[1])
+        
+        counts = Counter(cols)
+        out = [value for value, count in counts.items() if count > 1]
+
+        return out
 
     # check the given coordinate on the board for multiple queens on the diagonal
     def diag_check(self, coords):
@@ -115,7 +134,7 @@ board.shuffle()
 board.fixed_queen()
 board.pprint()
 
-print(board.queens)
+print(board.row_check())
 
         
 
