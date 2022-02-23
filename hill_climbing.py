@@ -59,7 +59,14 @@ class Board:
     def check_col(self, y):
         col = []
         for i in range(8):
-            pass
+            col.append(self.grid[i][y])
+        
+        out = col.count(1) - 1
+        
+        if out < 1:
+            return 0
+        else:
+            return out
         
         
         
@@ -86,8 +93,9 @@ l = (7 % 8) + 1
 board = Board(8, k, l)
 board.place_fixed_queen()
 board.place_queens()
-
+board.move((1,1),(1,0))
 print(board.grid)
-print(board.check_row(7))
+print(board.check_col(2))
+
 
 
