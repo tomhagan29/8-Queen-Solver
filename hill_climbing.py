@@ -10,15 +10,11 @@ class Board:
         return self.heuristic == 0
     
     """
-    This function calculates the heuristic of all tiles if a queen was to move there
+    This function calculates the amount of attacks that are possible on the board
     """
     @property
-    def tile_heuristics(self):
-        # loop through rows
-        for i in range(8):
-            # loop through cols
-            for j in range(8):
-                pass
+    def manhattan(self):
+        pass
     
     # places fixed queen on grid
     def place_fixed_queen(self):
@@ -67,7 +63,10 @@ class Board:
             return 0
         else:
             return out
-        
+    
+    def check_diagonal(self, x, y):
+        temp = list(np.diagonal(self.grid, (x-y)))
+        return temp.count(1) - 1
         
         
 """
@@ -95,7 +94,7 @@ board.place_fixed_queen()
 board.place_queens()
 board.move((1,1),(1,0))
 print(board.grid)
-print(board.check_col(2))
+print(board.manhattan)
 
 
 
