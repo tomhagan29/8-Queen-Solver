@@ -3,15 +3,22 @@ import numpy as np
 class Board:
     def __init__(self, N, k, l):
         self.grid = np.array([[0]*N]*N)
-        self.fixed_queen = (k-1, l-1)
+        self.fixed_queen = (l-1, k-1)
     
     @property
     def solved(self):
         return self.heuristic == 0
     
+    """
+    This function calculates the heuristic of all tiles if a queen was to move there
+    """
     @property
-    def heuristic(self):
-        pass
+    def tile_heuristics(self):
+        # loop through rows
+        for i in range(8):
+            # loop through cols
+            for j in range(8):
+                pass
     
     # places fixed queen on grid
     def place_fixed_queen(self):
@@ -23,11 +30,39 @@ class Board:
             if i == self.fixed_queen[1]:
                 continue
             else:
-                self.grid[0][i] = 1
+                self.grid[i][i] = 1
     
+    # returns a list of tuples containing the coordinates of each queen
+    @property
+    def queens(self):
+        queens = []
+        for i in range(8):
+            for j in range(8):
+                if self.grid[i][j] == 1:
+                    queens.append((i,j))
+        return queens
     
+    """
+    Function to move a queen around the board
+    queen is current location (x,y)
+    pos is new position (x,y)
+    """
+    def move(self, queen, pos):
+        self.grid[pos[0]][pos[1]] = 1
+        self.grid[queen[0]][queen[1]] = 0
+                
+    def check_row(self, x):
+        row = list(self.grid[x])
+        out = row.count(1) - 1
+        return out
+    
+    def check_col(self, y):
+        col = []
+        for i in range(8):
+            pass
         
-    
+        
+        
 """
 k is the last digit of my student number - 8
 l is the penultimate digit of my student number - 7
@@ -51,9 +86,8 @@ l = (7 % 8) + 1
 board = Board(8, k, l)
 board.place_fixed_queen()
 board.place_queens()
-# print(board.grid)
-# print(board.fixed_queen)
+
+print(board.grid)
+print(board.check_row(7))
 
 
-temp = np.array([[1,2],[3,4]])
-print(temp)
