@@ -14,7 +14,13 @@ class Board:
     """
     @property
     def manhattan(self):
-        pass
+        h = 0
+        for i in range(8):
+            for j in range(8):
+                h += self.check_col(j)
+                h += self.check_row(i)
+                h += self.check_diagonal(i, j)
+        return h
     
     # places fixed queen on grid
     def place_fixed_queen(self):
@@ -91,5 +97,4 @@ l = (7 % 8) + 1
 board = Board(8, k, l)
 board.place_fixed_queen()
 board.place_queens()
-board.move((1,1),(1,0))
 print(board.grid)
