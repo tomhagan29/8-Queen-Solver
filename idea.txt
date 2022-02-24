@@ -1,2 +1,1 @@
-calculate heuristic for each tile that a queen can move to
-loop through all queens and record which queen has the lowest heuristic within possible moves
+https://www.geeksforgeeks.org/n-queen-problem-local-search-using-hill-climbing-with-random-neighbour/
