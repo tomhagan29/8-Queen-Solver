@@ -1,3 +1,5 @@
 https://www.geeksforgeeks.org/n-queen-problem-local-search-using-hill-climbing-with-random-neighbour/
 https://www.geeksforgeeks.org/introduction-hill-climbing-artificial-intelligence/
 https://www.geeksforgeeks.org/printing-solutions-n-queen-problem/?ref=lbp
+
+

@@ -44,13 +44,16 @@ class Board:
     pos is new position (x,y)
     """
     def move(self, queen, pos):
-        self.grid[pos[0]][pos[1]] = 1
-        self.grid[queen[0]][queen[1]] = 0
+        self.grid[pos[1]][pos[0]] = 1
+        self.grid[queen[1]][queen[0]] = 0
                 
     def check_row(self, x):
         row = list(self.grid[x])
         out = row.count(1) - 1
-        return out
+        if out < 1:
+            return 0
+        else:
+            return out
     
     def check_col(self, y):
         col = []
@@ -75,14 +78,14 @@ The fixed queen needs to placed on the tile ((k mod 8) + 1, (l mod 8) + 1) = (1,
 To match indexing of array I will subtract 1 - (0,7)
 Therefore the fixed queen would be placed where the 1 is:
    0 1 2 3 4 5 6 7
-0 [0 0 0 0 0 0 0 1]
+0 [0 0 0 0 0 0 0 0]
 1 [0 0 0 0 0 0 0 0]
 2 [0 0 0 0 0 0 0 0]
 3 [0 0 0 0 0 0 0 0]
 4 [0 0 0 0 0 0 0 0]
 5 [0 0 0 0 0 0 0 0]
 6 [0 0 0 0 0 0 0 0]
-7 [0 0 0 0 0 0 0 0]
+7 [1 0 0 0 0 0 0 0]
  
 """
 k = (8 % 8) + 1
@@ -91,5 +94,8 @@ l = (7 % 8) + 1
 board = Board(8, k, l)
 board.place_fixed_queen()
 board.place_queens()
+board.move((7,7),(6,7))
+board.move((5,5),(6,5))
 print(board.grid)
-print(board.manhattan)
+
+print(board.check_diagonal(0,0))
