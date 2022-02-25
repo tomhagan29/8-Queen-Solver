@@ -25,7 +25,27 @@ class Board:
                 temp = random.randint(0,7)
                 self.grid[temp][i] = 1
 
+    
+    @property
+    def attacks(self):
+        attacks = -1
+        # checking the rows for attacks
+        for i in range(8):
+            for j in range(8):
+                if self.grid[j][i] != 0:
+                    attacks += 1
+        
+        return attacks
+
+            
+
+    def check_cols(self):
+        pass
+
+    def check_diags(self):
+        pass
 
 board = Board(8, 8, 7)
 board.place_queens()
 print(board.grid)
+print(board.attacks)
