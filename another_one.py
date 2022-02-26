@@ -43,7 +43,7 @@ class Board:
         pass
     
     """
-    Uses the tile function to get the best tile to lower heuristic and moves the queen in that column to the tile
+    Function to move a specified "queen" to a specified coordinate (coords)
     """
     def move(self):
         pass
@@ -61,12 +61,23 @@ class Board:
          
         return attacks
 
-
     """
     Function used to check the colums in the grid for possible attacks
     """
     def check_cols(self):
-        pass
+        attacks = 0
+        for i in range(8):
+            temp = []
+            # adding all the elements in a column to a list
+            for j in range(8):
+                temp.append(self.grid[j][i])
+
+            queens = temp.count(1) + temp.count(2) 
+            if queens > 1:
+                attacks += queens - 1
+
+        return attacks 
+
     
     """
     Function used to check the diagonals in the grid for possible attacks
@@ -74,8 +85,10 @@ class Board:
     def check_diags(self):
         pass
     
+    
+    #All functions below this comment are for testing purposes :)
     """
-    Simple function for testing purposes
+    Function to count the number of queens on the board
     """
     def count_queens(self):
         queens = 0
@@ -85,11 +98,25 @@ class Board:
                     queens += 1
         return queens
 
+    """
+    Function to fill the first row with queens and the rest blank
+    """
+    def populate_board(self):
+        for i in range(8):
+            for j in range(8):
+                self.grid[j][i] = 0
+
+        self.grid[0] = [1]*8
+
+    def move_queen(self, queen, coords):
+        self.grid[queen[1]][queen[0]] = 0
+        self.grid[coords[1]][coords[0]] = 1
+
     @property
     def pprint(self):
         for i in self.grid:
             print(i)
 
 board = Board(8, 8, 7)
-board.place_queens()
+board.populate_board()
 board.pprint
