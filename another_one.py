@@ -14,21 +14,25 @@ class Board:
 
     def __init__(self, N, k, l):
         self.grid = np.array([[0]*N]*N)
+        self.N = N
         self.k = k % N
         self.l = l % N
         # placing fixed queen
         self.grid[self.l][self.k] = 2
 
     def place_queens(self):
-        for i in range(7):
-            temp = random.randint(0,7)
-            self.grid[temp][i] = 1
+        for i in range(8):
+            if i == self.k:
+                continue
+            else:
+                temp = random.randint(0,7)
+                self.grid[temp][i] = 1
 
     """
-    Attacks is the heuristic function that I will be using to score the board
+    Heuristic function that I will be using to score the board
     """
     @property
-    def attacks(self):
+    def heuristic(self):
         pass
     
     """
@@ -47,8 +51,16 @@ class Board:
     """
     Function used to check the rows in the grid for possible attacks
     """
-    def check_row(self):
-        pass
+    def check_rows(self):
+        attacks = 0
+        # loop through rows
+        for i in range(8):
+            temp = list(self.grid[i]).count(1) + list(self.grid[i]).count(2)
+            if temp > 1:
+                attacks += temp - 1
+         
+        return attacks
+
 
     """
     Function used to check the colums in the grid for possible attacks
@@ -57,11 +69,22 @@ class Board:
         pass
     
     """
-    Function used to checkt the diagonals in teh grid for possible attacks
+    Function used to check the diagonals in the grid for possible attacks
     """
     def check_diags(self):
         pass
     
+    """
+    Simple function for testing purposes
+    """
+    def count_queens(self):
+        queens = 0
+        for i in range(8):
+            for j in range(8):
+                if self.grid[j][i] != 0:
+                    queens += 1
+        return queens
+
     @property
     def pprint(self):
         for i in self.grid:
@@ -70,4 +93,3 @@ class Board:
 board = Board(8, 8, 7)
 board.place_queens()
 board.pprint
-print(board.check_row())
