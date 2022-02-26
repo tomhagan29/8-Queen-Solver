@@ -33,7 +33,11 @@ class Board:
     """
     @property
     def heuristic(self):
-        pass
+        h = 0
+        h += self.check_cols()
+        h += self.check_rows()
+        h += self.check_diags()
+        return h
     
     """
     Returns the tile of the lowest heuristic tile on the board aka the best move
@@ -136,8 +140,6 @@ class Board:
 
 board = Board(8, 8, 7)
 board.populate_board()
-board.move_queen((1,0),(6,1))
-board.move_queen((2,0),(5,2))
 board.pprint
 
-print(board.check_diags())
+print(board.heuristic)
