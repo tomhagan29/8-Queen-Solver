@@ -83,7 +83,24 @@ class Board:
     Function used to check the diagonals in the grid for possible attacks
     """
     def check_diags(self):
-        pass
+        attacks = 0
+        # checking the diagonal according to this slash \
+        for i in range(-8,8):
+            temp = list(np.diagonal(self.grid, i))
+            queens = temp.count(1) + temp.count(2)
+
+            if queens > 1:
+                attacks += queens - 1
+        
+        # checking the diagonal according to this slah /
+        for i in range(-8,8):
+            temp = list(np.diagonal(np.fliplr(self.grid),i))
+            queens = temp.count(1) + temp.count(2)
+
+            if queens > 1:
+                attacks += queens - 1
+                
+        return attacks
     
     
     #All functions below this comment are for testing purposes :)
@@ -119,4 +136,8 @@ class Board:
 
 board = Board(8, 8, 7)
 board.populate_board()
+board.move_queen((1,0),(6,1))
+board.move_queen((2,0),(5,2))
 board.pprint
+
+print(board.check_diags())
