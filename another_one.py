@@ -1,6 +1,7 @@
 import numpy as np
 import random
 from copy import deepcopy
+from collections import deque
 
 class Node:
     def __init__(self, board, parent=None):
@@ -35,6 +36,7 @@ class Board:
         # placing fixed queen
         self.grid[self.l][self.k] = 2
 
+
     """
     Randomly populate the board with queens
     """
@@ -46,6 +48,7 @@ class Board:
                 temp = random.randint(0,self.N - 1)
                 self.grid[temp][i] = 1
 
+
     """
     Heuristic function that I will be using to score the board
     """
@@ -56,14 +59,15 @@ class Board:
         h += self.rows()
         h += self.diags()
         return h
-    
+
+
     """
     Returns true if there are no possible attacks on the board
     """
     @property
     def solved(self):
         return self.heuristic == 0
-    
+
 
     """
     Function used to check the rows in the grid for possible attacks
@@ -77,6 +81,7 @@ class Board:
                 attacks += temp - 1
          
         return attacks
+
 
     """
     Function used to check the colums in the grid for possible attacks
@@ -119,6 +124,41 @@ class Board:
                 
         return attacks
     
+    """
+    Function to move "queen" to "coords" both are tuples (x,y)
+    """
+    def move(self, queen, coords):
+        self.grid[queen[1]][queen[0]] = 0
+        self.grid[coords[1]][coords[0]] = 1
+
+    """
+    Function that returns a list of all the possible moves that each queen can make
+    Input coordinates of queen (x,y)
+    """
+    def tiles(self, queen):
+        tiles = []
+        for i in range(self.N):
+            if i == queen[1]:
+                continue
+            else:
+                tiles.append((queen[0], i))
+        return tiles
+
+    @property
+    def queens(self):
+        queens = []
+        for i in range(self.N):
+            for j in range(self.N):
+                if self.grid[j][i] != 0:
+                    queens.append((i,j))
+
+        return queens
+    @property
+    def pprint(self):
+        for i in self.grid:
+            print(i)
+
+   
     #All functions below this comment are for testing purposes :)
     """
     Function to count the number of queens on the board
@@ -141,14 +181,7 @@ class Board:
 
         self.grid[0] = [1]*self.N
 
-    def move_queen(self, queen, coords):
-        self.grid[queen[1]][queen[0]] = 0
-        self.grid[coords[1]][coords[0]] = 1
-
-    @property
-    def pprint(self):
-        for i in self.grid:
-            print(i)
+    
 
 
 class Solver:
@@ -157,14 +190,11 @@ class Solver:
     
     @property
     def solve(self):
-        solved = False
-        while not solved:
-            pass
+        pass
+        
 
 
 board = Board(8, 8, 7)
 board.populate_board()
 board.pprint
-print()
-new_board = np.array([[0]*8]*8)
-print(new_board)
+print(board.queens)
