@@ -191,6 +191,7 @@ class Solver:
     @property
     def solve(self):
         pass
+
         
 
 
