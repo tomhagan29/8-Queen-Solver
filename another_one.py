@@ -1,6 +1,28 @@
 import numpy as np
 import random
 
+class Node:
+    def __init__(self, board, parent=None):
+        self.board = board
+        self.parent = parent
+        if self.parent == None:
+            self.g = 0
+        else:
+            self.g = parent.g + 1
+
+    @property
+    def f(self):
+        return self.g + self.h
+    
+    @property
+    def h(self):
+        return self.board.heuristic
+    
+    @property
+    def solved(self):
+        return self.board.solved
+        
+
 """
 Board class represent the chess board
 N is the number of queens and the size of the board NxN
@@ -20,7 +42,10 @@ class Board:
         # placing fixed queen
         self.grid[self.l][self.k] = 2
 
-    def place_queens(self):
+    """
+    Randomly populate the board with queens
+    """
+    def random_queens(self):
         for i in range(8):
             if i == self.k:
                 continue
@@ -34,17 +59,17 @@ class Board:
     @property
     def heuristic(self):
         h = 0
-        h += self.check_cols()
-        h += self.check_rows()
-        h += self.check_diags()
+        h += self.cols()
+        h += self.rows()
+        h += self.diags()
         return h
     
     """
-    Returns the tile of the lowest heuristic tile on the board aka the best move
+    Returns true if there are no possible attacks on the board
     """
     @property
-    def tile(self):
-        pass
+    def solved(self):
+        return self.heuristic == 0
     
     """
     Function to move a specified "queen" to a specified coordinate (coords)
@@ -55,7 +80,7 @@ class Board:
     """
     Function used to check the rows in the grid for possible attacks
     """
-    def check_rows(self):
+    def rows(self):
         attacks = 0
         # loop through rows
         for i in range(8):
@@ -68,7 +93,7 @@ class Board:
     """
     Function used to check the colums in the grid for possible attacks
     """
-    def check_cols(self):
+    def cols(self):
         attacks = 0
         for i in range(8):
             temp = []
@@ -86,7 +111,7 @@ class Board:
     """
     Function used to check the diagonals in the grid for possible attacks
     """
-    def check_diags(self):
+    def diags(self):
         attacks = 0
         # checking the diagonal according to this slash \
         for i in range(-8,8):
