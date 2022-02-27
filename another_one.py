@@ -1,19 +1,12 @@
 import numpy as np
 import random
+from copy import deepcopy
 
 class Node:
     def __init__(self, board, parent=None):
         self.board = board
         self.parent = parent
-        if self.parent == None:
-            self.g = 0
-        else:
-            self.g = parent.g + 1
 
-    @property
-    def f(self):
-        return self.g + self.h
-    
     @property
     def h(self):
         return self.board.heuristic
@@ -21,7 +14,7 @@ class Node:
     @property
     def solved(self):
         return self.board.solved
-        
+
 
 """
 Board class represent the chess board
@@ -46,11 +39,11 @@ class Board:
     Randomly populate the board with queens
     """
     def random_queens(self):
-        for i in range(8):
+        for i in range(self.N):
             if i == self.k:
                 continue
             else:
-                temp = random.randint(0,7)
+                temp = random.randint(0,self.N - 1)
                 self.grid[temp][i] = 1
 
     """
@@ -71,11 +64,6 @@ class Board:
     def solved(self):
         return self.heuristic == 0
     
-    """
-    Function to move a specified "queen" to a specified coordinate (coords)
-    """
-    def move(self):
-        pass
 
     """
     Function used to check the rows in the grid for possible attacks
@@ -83,7 +71,7 @@ class Board:
     def rows(self):
         attacks = 0
         # loop through rows
-        for i in range(8):
+        for i in range(self.N):
             temp = list(self.grid[i]).count(1) + list(self.grid[i]).count(2)
             if temp > 1:
                 attacks += temp - 1
@@ -95,10 +83,10 @@ class Board:
     """
     def cols(self):
         attacks = 0
-        for i in range(8):
+        for i in range(self.N):
             temp = []
             # adding all the elements in a column to a list
-            for j in range(8):
+            for j in range(self.N):
                 temp.append(self.grid[j][i])
 
             queens = temp.count(1) + temp.count(2) 
@@ -114,7 +102,7 @@ class Board:
     def diags(self):
         attacks = 0
         # checking the diagonal according to this slash \
-        for i in range(-8,8):
+        for i in range(-self.N,self.N):
             temp = list(np.diagonal(self.grid, i))
             queens = temp.count(1) + temp.count(2)
 
@@ -122,7 +110,7 @@ class Board:
                 attacks += queens - 1
         
         # checking the diagonal according to this slah /
-        for i in range(-8,8):
+        for i in range(-self.N,self.N):
             temp = list(np.diagonal(np.fliplr(self.grid),i))
             queens = temp.count(1) + temp.count(2)
 
@@ -131,15 +119,14 @@ class Board:
                 
         return attacks
     
-    
     #All functions below this comment are for testing purposes :)
     """
     Function to count the number of queens on the board
     """
     def count_queens(self):
         queens = 0
-        for i in range(8):
-            for j in range(8):
+        for i in range(self.N):
+            for j in range(self.N):
                 if self.grid[j][i] != 0:
                     queens += 1
         return queens
@@ -148,11 +135,11 @@ class Board:
     Function to fill the first row with queens and the rest blank
     """
     def populate_board(self):
-        for i in range(8):
-            for j in range(8):
+        for i in range(self.N):
+            for j in range(self.N):
                 self.grid[j][i] = 0
 
-        self.grid[0] = [1]*8
+        self.grid[0] = [1]*self.N
 
     def move_queen(self, queen, coords):
         self.grid[queen[1]][queen[0]] = 0
@@ -163,8 +150,21 @@ class Board:
         for i in self.grid:
             print(i)
 
+
+class Solver:
+    def __init__(self, start):
+        self.start = start
+    
+    @property
+    def solve(self):
+        solved = False
+        while not solved:
+            pass
+
+
 board = Board(8, 8, 7)
 board.populate_board()
 board.pprint
-
-print(board.heuristic)
+print()
+new_board = np.array([[0]*8]*8)
+print(new_board)
