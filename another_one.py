@@ -1,7 +1,7 @@
 import numpy as np
 import random
 from copy import deepcopy
-from collections import deque
+
 
 class Node:
     def __init__(self, board, parent=None):
@@ -33,8 +33,6 @@ class Board:
         self.N = N
         self.k = k % N
         self.l = l % N
-        # placing fixed queen
-        self.grid[self.l][self.k] = 2
 
 
     """
@@ -158,8 +156,6 @@ class Board:
         for i in self.grid:
             print(i)
 
-   
-    #All functions below this comment are for testing purposes :)
     """
     Function to count the number of queens on the board
     """
@@ -176,13 +172,14 @@ class Board:
     """
     def populate_board(self):
         for i in range(self.N):
-            for j in range(self.N):
-                self.grid[j][i] = 0
-
-        self.grid[0] = [1]*self.N
-
-    
-
+            if i == self.k:
+                continue
+            else:
+                temp = random.randint(0, self.N -1)
+                self.grid[temp][i] = 1
+        
+        self.grid[self.l][self.k] = 1
+        
 
 class Solver:
     def __init__(self, start):
@@ -192,50 +189,51 @@ class Solver:
     """
     Function that solves the puzzle and returns solution
     """
-    @property
+ 
     def solve(self):
         
-        solutions = []
         queue = []
         # Adding starting board to queue
         queue.append(Node(self.start))
-        
+        fixed_queen = (0,7)
         # while elements are in the queue
         while queue:
             # getting first node in queue
             current_node = queue[0]
             
             if current_node.solved:
-                solutions.append(current_node.board)
+                return current_node.board
             # getting list of queen coordinates
             queens = current_node.board.queens
             
             # looping through the queens in current board
             for queen in queens:
-                # getting a list of tiles where the queen can move
-                actions = current_node.board.actions(queen)
-                # looping through all the actions a queen can make
-                for action in actions:
-                    # copying board
-                    new_board = deepcopy(current_node.board)
-                    # moving queen
-                    new_board.move(queen, action)
-                    # creating new node
-                    child_node = Node(new_board, current_node)
-                    # adding node to queue
-                    queue.append(child_node)
+                if queen == current_node.board.fixed_queen:
+                    continue
+                else:
+                    # getting a list of tiles where the queen can move
+                    actions = current_node.board.actions(queen)
+                    # looping through all the actions a queen can make
+                    for action in actions:
+                        # copying board
+                        new_board = deepcopy(current_node.board)
+                        # moving queen
+                        new_board.move(queen, action)
+                        # creating new node
+                        child_node = Node(new_board, current_node)
+                        # adding node to queue
+                        queue.append(child_node)
             
             # add some node removal
-            
+            for node in queue:
+                if node.h > current_node.h:
+                    queue.remove(node)
+                    
             queue.remove(current_node)
             queue = sorted(queue, key=lambda x: x.h)
-        
-        return solutions
+
                     
 
 board = Board(8, 8, 7)
 board.populate_board()
-s = Solver(board)
-solutions = s.solve()
-for i in solutions:
-    print(i)
+board.pprint
