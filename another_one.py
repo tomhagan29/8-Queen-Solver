@@ -2,6 +2,11 @@ import numpy as np
 import random
 from copy import deepcopy
 
+"""
+To Do
+    - Implement tile heuristics and optimise moves to the best tile
+"""
+
 
 class Node:
     def __init__(self, board, parent=None):
@@ -33,6 +38,7 @@ class Board:
         self.N = N
         self.k = k % N
         self.l = l % N
+        self.fixed_queen = (self.k,self.l)
 
 
     """
@@ -151,6 +157,7 @@ class Board:
                     queens.append((i,j))
 
         return queens
+    
     @property
     def pprint(self):
         for i in self.grid:
@@ -171,6 +178,7 @@ class Board:
     Function to fill the first row with queens and the rest blank
     """
     def populate_board(self):
+        self.grid = np.array([[0]*self.N]*self.N)
         for i in range(self.N):
             if i == self.k:
                 continue
@@ -195,14 +203,25 @@ class Solver:
         queue = []
         # Adding starting board to queue
         queue.append(Node(self.start))
-        fixed_queen = (0,7)
+        counter = 0
         # while elements are in the queue
         while queue:
+        
             # getting first node in queue
             current_node = queue[0]
-            
+                
+            # checking if solved
             if current_node.solved:
+                print(f"Restart Count: {counter}")
                 return current_node.board
+            
+            if random.random() > 0.7 and current_node.h == 1:
+                counter += 1
+                current_node.board.pprint
+                print(current_node.h)
+                print()
+                current_node.board.populate_board()
+            
             # getting list of queen coordinates
             queens = current_node.board.queens
             
@@ -224,16 +243,17 @@ class Solver:
                         # adding node to queue
                         queue.append(child_node)
             
-            # add some node removal
-            for node in queue:
-                if node.h > current_node.h:
-                    queue.remove(node)
-                    
             queue.remove(current_node)
             queue = sorted(queue, key=lambda x: x.h)
+
 
                     
 
 board = Board(8, 8, 7)
 board.populate_board()
-board.pprint
+
+s = Solver(board)
+solution = s.solve()
+
+solution.pprint
+print(solution.heuristic)
