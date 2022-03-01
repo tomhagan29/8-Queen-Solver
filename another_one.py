@@ -215,7 +215,7 @@ class Solver:
                 print(f"Restart Count: {counter}")
                 return current_node.board
             
-            if random.random() > 0.7 and current_node.h == 1:
+            if random.random() > 0.8 and current_node.h == 1:
                 counter += 1
                 current_node.board.pprint
                 print(current_node.h)
