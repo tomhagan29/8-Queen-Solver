@@ -132,10 +132,10 @@ class Board:
         self.grid[coords[1]][coords[0]] = 1
 
     """
-    Function that returns a list of all the possible moves that each queen can make
+    Function that returns a list of all the possible moves that each queen can make within it's column
     Input coordinates of queen (x,y)
     """
-    def tiles(self, queen):
+    def actions(self, queen):
         tiles = []
         for i in range(self.N):
             if i == queen[1]:
@@ -188,14 +188,52 @@ class Solver:
     def __init__(self, start):
         self.start = start
     
+        
+    """
+    Function that solves the puzzle and returns solution
+    """
     @property
     def solve(self):
-        pass
-
         
-
+        solutions = []
+        queue = []
+        # Adding starting board to queue
+        queue.append(Node(self.start))
+        
+        # while elements are in the queue
+        while queue:
+            # getting first node in queue
+            current_node = queue[0]
+            
+            if current_node.solved:
+                solutions.append(current_node.board)
+            # getting list of queen coordinates
+            queens = current_node.board.queens
+            
+            # looping through the queens in current board
+            for queen in queens:
+                # getting a list of tiles where the queen can move
+                actions = current_node.board.actions(queen)
+                # looping through all the actions a queen can make
+                for action in actions:
+                    # copying board
+                    new_board = deepcopy(current_node.board)
+                    # moving queen
+                    new_board.move(queen, action)
+                    # creating new node
+                    child_node = Node(new_board, current_node)
+                    # adding node to queue
+                    queue.append(child_node)
+            
+            queue.remove(current_node)
+            queue = sorted(queue, key=Node.h)
+        
+        return solutions
+                    
 
 board = Board(8, 8, 7)
 board.populate_board()
-board.pprint
-print(board.queens)
+s = Solver(board)
+solutions = s.solve()
+for i in solutions:
+    print(i)
