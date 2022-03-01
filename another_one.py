@@ -201,6 +201,7 @@ class Solver:
     def solve(self):
         
         queue = []
+        visited_nodes = []
         # Adding starting board to queue
         queue.append(Node(self.start))
         counter = 0
@@ -209,18 +210,19 @@ class Solver:
         
             # getting first node in queue
             current_node = queue[0]
+            
                 
             # checking if solved
             if current_node.solved:
                 print(f"Restart Count: {counter}")
                 return current_node.board
             
-            if random.random() > 0.8 and current_node.h == 1:
+            if current_node.h == 1:
                 counter += 1
-                current_node.board.pprint
-                print(current_node.h)
-                print()
-                current_node.board.populate_board()
+            
+            # implementing backtracking to avoid local minimum
+            if counter == 10:
+                current_node = random.choice(visited_nodes)
             
             # getting list of queen coordinates
             queens = current_node.board.queens
@@ -243,8 +245,13 @@ class Solver:
                         # adding node to queue
                         queue.append(child_node)
             
-            queue.remove(current_node)
+            visited_nodes.append(current_node)
+            
+            if current_node in queue:
+                queue.remove(current_node)
+            
             queue = sorted(queue, key=lambda x: x.h)
+            
 
 
                     
