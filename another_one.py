@@ -225,8 +225,10 @@ class Solver:
                     # adding node to queue
                     queue.append(child_node)
             
+            # add some node removal
+            
             queue.remove(current_node)
-            queue = sorted(queue, key=Node.h)
+            queue = sorted(queue, key=lambda x: x.h)
         
         return solutions
                     
