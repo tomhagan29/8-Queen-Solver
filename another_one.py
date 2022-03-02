@@ -135,6 +135,17 @@ class Board:
         self.grid[queen[1]][queen[0]] = 0
         self.grid[coords[1]][coords[0]] = 1
 
+    def best_move(self, queen):
+        actions = self.actions(queen)
+        best = deepcopy(self)
+        for action in actions:
+            temp = deepcopy(best)
+            temp.move(queen, action)
+            if temp.heuristic < best.heuristic:
+                best = deepcopy(temp)
+        
+        self.grid = best.grid
+    
     """
     Function that returns a list of all the possible moves that each queen can make within it's column
     Input coordinates of queen (x,y)
@@ -202,6 +213,7 @@ class Solver:
         
         queue = []
         visited_nodes = []
+        solutions = set()
         # Adding starting board to queue
         queue.append(Node(self.start))
         counter = 0
@@ -214,15 +226,16 @@ class Solver:
                 
             # checking if solved
             if current_node.solved:
-                print(f"Restart Count: {counter}")
-                return current_node.board
+                return solutions.add(current_node.board)
             
             if current_node.h == 1:
                 counter += 1
             
             # implementing backtracking to avoid local minimum
-            if counter == 10:
+            if counter == 64:
+                print(f'Restart: {counter}')
                 current_node = random.choice(visited_nodes)
+                counter = 0
             
             # getting list of queen coordinates
             queens = current_node.board.queens
@@ -245,12 +258,15 @@ class Solver:
                         # adding node to queue
                         queue.append(child_node)
             
-            visited_nodes.append(current_node)
+            if current_node.h > 1:
+                visited_nodes.append(current_node)
             
             if current_node in queue:
                 queue.remove(current_node)
             
             queue = sorted(queue, key=lambda x: x.h)
+        
+        
             
 
 
@@ -258,9 +274,8 @@ class Solver:
 
 board = Board(8, 8, 7)
 board.populate_board()
-
-s = Solver(board)
-solution = s.solve()
-
-solution.pprint
-print(solution.heuristic)
+queens = board.queens
+board.pprint
+board.best_move(queens[1])
+print()
+board.pprint
