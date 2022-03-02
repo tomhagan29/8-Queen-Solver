@@ -12,7 +12,15 @@ class Node:
     def __init__(self, board, parent=None):
         self.board = board
         self.parent = parent
-
+        if self.parent == None:
+            self.g = 0
+        else:
+            self.g = parent.g + 1
+            
+    @property
+    def f(self):
+        return self.g + self.h
+    
     @property
     def h(self):
         return self.board.heuristic
@@ -213,7 +221,6 @@ class Solver:
         
         queue = []
         visited_nodes = []
-        solutions = set()
         # Adding starting board to queue
         queue.append(Node(self.start))
         counter = 0
@@ -226,7 +233,7 @@ class Solver:
                 
             # checking if solved
             if current_node.solved:
-                return solutions.add(current_node.board)
+                return current_node.board
             
             if current_node.h == 1:
                 counter += 1
@@ -246,36 +253,54 @@ class Solver:
                     continue
                 else:
                     # getting a list of tiles where the queen can move
-                    actions = current_node.board.actions(queen)
-                    # looping through all the actions a queen can make
-                    for action in actions:
-                        # copying board
-                        new_board = deepcopy(current_node.board)
-                        # moving queen
-                        new_board.move(queen, action)
-                        # creating new node
-                        child_node = Node(new_board, current_node)
-                        # adding node to queue
-                        queue.append(child_node)
+                    actions = current_node.board.actions(queen)                    
+                    # copying board
+                    new_board = deepcopy(current_node.board)
+                    # moving queen
+                    new_board.best_move(queen)
+                    # creating new node
+                    child_node = Node(new_board, current_node)
+                    # adding node to queue
+                    queue.append(child_node)
             
-            if current_node.h > 1:
-                visited_nodes.append(current_node)
+            
+            visited_nodes.append(current_node)
             
             if current_node in queue:
                 queue.remove(current_node)
             
-            queue = sorted(queue, key=lambda x: x.h)
+            queue = sorted(queue, key=lambda x: x.f)
         
+     
+    def solve2(self):
         
+        # queue of nodes to visit
+        queue = []
+        
+        visited = []
+        solutions = []
+        
+        root = Node(self.start)
+        queue.append(root)
+        
+        while queue:
             
-
-
-                    
+            # setting the current node            
+            current_node = queue[0]
+            
+            # checking if current node is solved
+            if current_node.solved:
+                solutions.append(current_node)
+            
+            
+            
+                 
+         
 
 board = Board(8, 8, 7)
 board.populate_board()
-queens = board.queens
 board.pprint
-board.best_move(queens[1])
-print()
-board.pprint
+
+s = Solver(board)
+solution = s.solve()
+solution.pprint

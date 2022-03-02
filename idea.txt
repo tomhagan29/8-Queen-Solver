@@ -3,3 +3,4 @@ https://www.geeksforgeeks.org/introduction-hill-climbing-artificial-intelligence
 https://www.geeksforgeeks.org/printing-solutions-n-queen-problem/?ref=lbp
 
 
+https://github.com/khyatimahajan/n-queens-hill-climbing/blob/master/n-queens.py
