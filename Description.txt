@@ -1,0 +1,10 @@
+For this piece of coursework, I chose to implement an A* search algorithm. 
+The A* search can be optimal as it avoids expanding that are initially expensive. 
+The A* search is a type of best-first search and expands upon the Dijksta algorithm, 
+meaning that it will traverse to the node with the lowest objective function (for minimisation). 
+The objective function is f(x)=g(x)+h(x), the g(x) is equal to the depth of the node in the tree and the h(x) is the heuristic of the node, 
+in this case it is the number of attacks that can be made on the board. I did however have to implement a restart block in my algorithm so it can avoid the local optimum, 
+which is hard to avoid as there are so many cases were the heuristic is 1. 
+Using this algorithm does involve some complexity issues as I noticed to find all solutions with this algorithm it can take a long time. 
+I think if I implemented a hill climbing algorithm with random restarts this would have lowered the runtime. 
+I also think if I reduced the number of steps within the algorithm, it would also reduce the runtime. 

@@ -42,7 +42,9 @@ class Node:
     
     @property
     def state(self):
-        return str(self) 
+        return str(self)
+    
+    
 
 class Board:
     
@@ -157,6 +159,10 @@ class Board:
         
         self.board[self.l][self.k] = 1
     
+    @property
+    def hashable(self):
+        return np.array2string(self.board)
+                
     
     """
     Prints board in representable state
@@ -173,7 +179,9 @@ class Solver:
         
     def solve(self):
         
-        solutions = []
+        # Got number of solutions online at https://www.datagenetics.com/blog/august42012/
+        number_of_solutions = 4
+        solutions = set()
         steps = 0
         queue = deque([Node(self.start)])
         seen = set()
@@ -182,10 +190,9 @@ class Solver:
             queue = deque(sorted(list(queue), key=lambda node: node.f))
             node = queue.popleft()
             if node.solved:
-                print(steps)
-                solutions.append(node.board)
+                solutions.add(node.board.hashable)
             
-            if len(solutions) == 2:
+            if len(solutions) == number_of_solutions:
                 break
             
             steps += 1
@@ -212,15 +219,23 @@ class Solver:
                         queue.appendleft(child)
                         seen.add(child.state)
         
-        return solutions          
+        return solutions
+                 
             
 if __name__ == '__main__':
     board = Board(8, 8, 7)
     board.populate_board()
+
     s = Solver(board)
-    solutions = s.solve()
-    for solution in solutions:
-        print()
-        solution.pprint()
+    solutions = list(s.solve())
+    f = open("output.txt", "w")
+    for i in range(4):
+        f.write(f"\nSolution {i+1}")
+        f.write("\n--------------\n")
+        f.write(solutions[i])
+        f.write("\n--------------\n")
+        
+        
+        
         
         
