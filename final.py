@@ -1,6 +1,8 @@
 from copy import deepcopy
 import numpy as np
 import random
+from collections import deque
+from pprint import pprint
 
 class Node:
     
@@ -12,7 +14,6 @@ class Node:
             self.g = 0
         else:
             self.g = parent.g + 1
-        
         
     """
     Function that returns the objective function
@@ -28,14 +29,20 @@ class Node:
     def h(self):
         return self.board.manhattan
     
-    
     """
     Check if solved
     """
     @property
     def solved(self):
         return self.board.solved
-        
+    
+    @property
+    def actions(self):
+        return self.board.actions
+    
+    @property
+    def state(self):
+        return str(self) 
 
 class Board:
     
@@ -44,7 +51,6 @@ class Board:
         self.N = N
         self.k = k%N
         self.l = l%N
-    
     
     """
     Function that checks if the board is solved
@@ -109,28 +115,37 @@ class Board:
         
         return queens
     
+    @property
+    def actions(self):
+        actions = dict()
+        
+        for queen in self.queens:
+            actions[queen] = self.get_moves(queen)
+
+        return actions
+    
+    def get_moves(self, queen):
+        moves = []
+        for i in range(self.N):
+            if i == queen[1]:
+                continue
+            moves.append((queen[0], i))
+            
+        return moves
+        
     """
     Function that moves the queen to the lowest heuristic tile
     """
-    def move(self, queen):
-        boards = []
-        temp = deepcopy(self)
-        
-        for i in range(self.N):
-            new_board = deepcopy(temp)
-            new_board.board[i][queen[0]] = 1
-            new_board.board[queen[1]][queen[0]] = 0
-            boards.append(new_board)
-            
-        boards = sorted(boards, key=lambda x: x.manhattan)
-        
-        return boards[0]
-        
+    def move(self, queen, coords):
+        self.board[queen[1]][queen[0]] = 0
+        self.board[coords[1]][coords[0]] = 1
     
     """
     Function to populate board with fixed queen and random queens
     """
     def populate_board(self):
+        
+        self.board = np.array([[0]*8]*8)
         
         for i in range(self.N):
             
@@ -156,24 +171,56 @@ class Solver:
     def __init__(self, start):
         self.start = start
         
-    def solve(self, iterations=200):
+    def solve(self):
         
+        solutions = []
         steps = 0
-        restarts = 0
-        current_node = Node(self.start)
-        
-        if current_node.solved:
-            return current_node.board
-        
-        for i in range(iterations):
-            pass
+        queue = deque([Node(self.start)])
+        seen = set()
+        seen.add(queue[0].state)
+        while queue:
+            queue = deque(sorted(list(queue), key=lambda node: node.f))
+            node = queue.popleft()
+            if node.solved:
+                print(steps)
+                solutions.append(node.board)
+            
+            if len(solutions) == 2:
+                break
+            
+            steps += 1
+            
+            if steps == 20:
+                new_board = Board(self.start.N, self.start.k, self.start.l)
+                new_board.populate_board()
+                queue = deque([Node(new_board)])
+                seen = set()
+                seen.add(queue[0].state)
+                node = queue.popleft()
+                steps = 0
 
+            
+            for queen in node.board.queens:
+                if queen == (node.board.k, node.board.l):
+                    continue
+                for action in node.actions[queen]:
+                    new_board = deepcopy(node.board)
+                    new_board.move(queen, action)
+                    child = Node(new_board, node)
+                    
+                    if child.state not in seen:
+                        queue.appendleft(child)
+                        seen.add(child.state)
+        
+        return solutions          
+            
 if __name__ == '__main__':
     board = Board(8, 8, 7)
     board.populate_board()
-    print(board.board)
-    print()
-    
-    temp = board.move(board.queens[1])
-    print(temp.board)
-    
+    s = Solver(board)
+    solutions = s.solve()
+    for solution in solutions:
+        print()
+        solution.pprint()
+        
+        
